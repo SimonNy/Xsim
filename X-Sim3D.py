@@ -4,9 +4,9 @@ Created on Mon Jan 13 12:59:19 2020
 @author: simonnyrup
 
 X-ray simulator. Simulates the 2D image generated with x-rays 
-emitted from a point source and penerating a material, represented by an 3D array.
+emitted from a point source and penerating a material represented by an 3D array.
 
-As a general the coordinate system is left-handed with center in x-ray point source. 
+Generally the coordinate system is left-handed with center in x-ray point source. 
 hat{y} points toward the camera(CCD object)
 hat{x} (positive right) and hat{z}(inwards) are orthogonal and forms a plane with hat{y} as the normal vector
 
@@ -26,7 +26,7 @@ inputs:
             (n, p)
     ray_ccd_ratio: The amount of different angled rays hitting one ccd.   
     
-    D: density matrix of size [n_m X m_m x p_m]
+    D: density matrix of size [grid_m[0] X grid_m[1] x grid_m[2]] - load a target object
 """
 #%%
 import numpy as np
@@ -45,7 +45,7 @@ from func.createD import drawBox, drawSphere, generateD
 from func.normalize3D import normalize3D
 from func.normalize2D import normalize2D
 from func.fieldOfView import fieldOfView
-import bohrium
+# import bohrium
 
 #%% Set the constants 
 
@@ -57,22 +57,33 @@ folder = "results/"
 # filename = "WupWup"
 saveImgs = True
 
-makeMovie = False
+makeMovie = True
 
 #Objects to be imported
 folder_obj = 'objects/generated/'
-# object_file = 'boxWithSphere_carbon_iron200x200x200.npy'
+# object_file = 'boxWithSmallSphere_carbon_iron200x200x200.npy'
 object_file = 'PotatoSingle.npy'
+
 filename = object_file.split('.')[0]
-D = np.load(folder_obj+object_file)*6
+D = np.load(folder_obj+object_file)*5
 # D = np.rot90(D, 3, (0,2))
 
-#Finds the bounding box for D(The space in D with material)
-""" Look at this monday """
-# D_box = np.nonzero(D)
-# D = D[D_box[0][0]:D_box[0][-1], D_box[1][0]:D_box[1][-1], D_box[2][0]:D_box[2][-1]]
+#Finds the bounding box for D in x and z(The space in D with material)
+D_box = np.nonzero(np.sum(D,axis=0))
+D_ybox = np.nonzero(np.sum(D, axis=1))
+D = D[D_ybox[0][0]:D_ybox[0][-1], D_box[0][0]:D_box[0][-1],np.min(D_box[1]):np.max(D_box[1])]
 
 
+# object_file2 = 'Sphere_carbon_water15x15x15.npy'
+# filename2 = object_file2.split('.')[0]
+# D2 = np.load(folder_obj+object_file2) 
+
+
+# D[D.shape[0]//4:D.shape[0]//4+D2.shape[0], D.shape[1] //
+#     4:D.shape[1]//4+D2.shape[1], D.shape[2]//4:D.shape[2]//4+D2.shape[2]] = D2
+
+# D[D==1] = 4
+# D = np.rot90(D, 1, (1, 2))
 print(D.shape)
 # object_file = 'horse_skeleton.npy'
 # filename = object_file.split('.')[0]
@@ -94,11 +105,16 @@ Information of FOV size and grid. Length and with needs to be bigger than
 material. For 1 to 1 transposability the amount of voxel per length needs 
 to be the same as in the material.
 """
+# size_fov = (size_m[0], size_m[1]*2, size_m[2]*2)
 size_fov = (size_m[0], size_m[1]*2, size_m[2]*2)
-grid_fov = (grid_m[0], int(grid_m[1]/size_m[1]*size_fov[1]),
-            int(grid_m[2]/size_m[2]*size_fov[2]))
+
+fov_grid = np.max(grid_m)
+# grid_fov = (grid_m[0], int(grid_m[1]/size_m[1]*size_fov[1]),
+            # int(grid_m[2]/size_m[2]*size_fov[2]))
 # grid_fov = (256, int(256/size_m[1]*size_fov[1]),
-#             int(256/size_m[2]*size_fov[2]))
+            # int(256/size_m[2]*size_fov[2]))
+
+grid_fov = (fov_grid, fov_grid*2, fov_grid*2)
 
 #Information about the size of the camera, _c is _camera
 size_c = (0.5, 0.5)
@@ -107,7 +123,7 @@ size_c = (0.5, 0.5)
 grid_ccd = (256, 256)
 
 #The "resolution" of each CCD. Makes more rays hit the same CCD
-ray_ccd_ratio = 4
+ray_ccd_ratio = 1
 
 # The finer grid for the camera calculations. 
 grid_c = np.multiply(grid_ccd, ray_ccd_ratio)
@@ -116,12 +132,12 @@ grid_c = np.multiply(grid_ccd, ray_ccd_ratio)
 # Movement in a single subframe in x and z dire
 mat_movement = (0.01, 0.0)
 # The starting position in x and z
-mat_start = (-0.0, 0)
+mat_start = (-0.2, 0)
 
 # Rotation in a single subframe in y, x and z direction in radians
 mat_rotate = (0, 0, 0)
 mat_rotstart = (0,0,0)
-# D = np.rot90(D, 1, (0,2))
+
 
 # The total of Image frames
 N_frames = 2
@@ -247,6 +263,7 @@ for i in range(N_frames):
             for j2 in range(grid_c[1]):
                 y_points, x_points, z_points = tuple(fov_list[i2*grid_c[1]+j2])
                 points_mask = y_points >= 0
+                points_mask[y_points > grid_m[0]-1] = False
                 # D_fov_conversion = np.add((x_points, z_points), D_fov_conversion)
                 #Translates the FOV points to the coordinates of D
                 x_points = D_fov_conversion[0] + x_points
