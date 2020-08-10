@@ -62,15 +62,37 @@ def produceXray(spec, N_points, Emin, Emax, Estep):
         yhit[i] = y
     # Scales to the right energies       
     xhit = xhit + Emax
-#    fig4, ax4 = plt.subplots(figsize=(10, 6))
-#    ax4.plot(np.arange(len(spec))+Emax,spec)
-#    ax4.scatter(xhit, yhit, s=1, label='Scatter plot of data')
+
+    """Plotting part """
+    # fig, ax = plt.subplots(figsize=(10, 6))
+    # ax.plot(np.arange(len(spec))+Emax,spec)
+    # ax.scatter(xhit, yhit, s=1, label='Scatter plot of data')
     
-#    fig, ax = plt.subplots(figsize=(10, 6))
+    # Playing with constants for Latex margin figures
+    pc = 400/2409 # the pc unit relative to inchens
+    goldenRatio = 1.618 # ratio between width and height
+    marginWidth = 11.5 # width of latex margin document
+    resize = 10 # scale=0.1 in latex
+
+    fig, ax = plt.subplots(figsize=(marginWidth*pc*resize, marginWidth*pc*resize/goldenRatio))
+    counts, bin_edges, _ = ax.hist(xhit, bins=N_bins, range=(
+        Emin-Estep/2, Emax+Estep/2), histtype='step', label='Photon counts', linewidth=3)
+    ax.plot(np.arange(len(spec))+Emin, spec/np.max(spec)
+            * np.max(counts), linewidth=3)
+    ax.get_yaxis().set_visible(False)
+    ax.get_xaxis().set_visible(False)
+    # ax.yaxis.label.set_size(18)
+    # ax.xaxis.label.set_size(18)
+    # add legend
+    # ax.legend(loc='best', fontsize=16)
+    # fig.tight_layout()
+
+    fig.savefig("hitNMissSpectrum.pdf", dpi=600)
+    """ End of Plotting part """
+    
+    
     counts, bin_edges = np.histogram(xhit, bins=N_bins, range=(Emin-Estep/2, Emax+Estep/2) )
-#    counts, bin_edges, _  = ax.hist(xhit, bins=N_bins, range=(Emin-Estep/2, Emax+Estep/2), histtype='step', label='histogram' )
-#    ax.set(xlabel="x (f(x) distributed)", ylabel=f"Frequency/{2/N_bins}", xlim=(Emin, Emax));
-    
+
     #The energies given from the distributions
     bin_centers = (bin_edges[1:] + bin_edges[:-1])/2
     return bin_centers, counts

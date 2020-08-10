@@ -50,7 +50,11 @@ def generateD(size, kind, mat1, mat2, mat_name):
         drawSphere(D, y//16, (y//16*11, x//2, z//2), mat2, mat_name)
     elif kind == "boxWithSmallSphere":
         drawBox(D, (y//2, x//4, z//4), (y, x//4*3, z//4*3), mat1, mat_name)
-        drawSphere(D, y//32, (y//32*11, x//2, z//2), mat2, mat_name)
+        drawSphere(D, y//32, (y//32*27, x//2, z//2), mat2, mat_name)
+    elif kind == "Sphere":
+        mat_val = [s for s in enumerate(mat_name) if mat2 in s][0][0]
+        D[:,:,:] = mat_val
+        drawSphere(D, y//2, (y//2, x//2, z//2), mat1, mat_name)
     elif kind == "oneMat":
         mat_val = [s for s in enumerate(mat_name) if mat1 in s][0][0]
         D[:,:,:] = mat_val
