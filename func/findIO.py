@@ -15,6 +15,7 @@ def findIO(voxel_size, d1, size_fov, alpha):
     # Finds the distance from the starting point of the ray to the entry point in the density matrix
     x_entry = (d1 - size_fov[1]) * np.tan(alpha[0])
     z_entry = (d1 - size_fov[2]) * np.tan(alpha[1])
+    """ Should it not be size_fov[0] for both?! """
     
     # Finds the distance from the starting point of the ray to the exit point in the density matrix
     x_exit = d1 * np.tan(alpha[0])

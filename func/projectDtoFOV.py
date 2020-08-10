@@ -6,7 +6,7 @@ def projectDtoFOV(grid_fov, grid_m, D, move):
         grid_m is the size of the object
         D is the object
         move is the movement in x and z
-        returns an array containging D in fov
+        returns an array containing D in fov
     """
     # Projects D into the FOV at the desired point with the desired size
     min_axis = np.min([grid_fov, grid_m], axis=0)
