@@ -7,9 +7,9 @@ import numpy as np
 from time import time
 
 #Grid definition in D
-grid_m = (15, 15, 15)
-mat1 = 'carbon'
-mat2 = 'water'
+grid_m = (8, 8, 8)
+mat1 = 'aluminium'
+mat2 = 'carbon'
 
 #The kind of D to be created
 """kind: boxWithBox, boxWithSphere, oneMat, boxWithSmallSphere, Sphere"""
