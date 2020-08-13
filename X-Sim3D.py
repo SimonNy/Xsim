@@ -62,6 +62,7 @@ from defineSystem import d1, d2, size_v_D, size_ccd_pixel, grid_ccd, \
 
 saveImgs = True
 makeMovie = True
+keepFOV = False
 
 # loads the object defineed in the loadObject file
 D = loadObject.D
@@ -163,7 +164,10 @@ else:
     t0 = time()
     print (f"FOV File with name: {fov_name} does not exist.\n Creates FOV list,")
     fov_list = fieldOfView(grid_fov, grid_qc, size_v_fov, d1, size_fov, alpha)
-    np.save('fov/'+fov_name,fov_list)
+    if keepFOV == True:
+        np.save('fov/'+fov_name,fov_list)
+    else:
+        print('keepFOV = False, did not save FOV file')
     dt = time() - t0
     print(f'took {dt:02.2f} seconds\n')
 
