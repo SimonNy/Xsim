@@ -1,18 +1,21 @@
 #%%
+from func.boundingbox import boundingbox
 import numpy as np
-import plotly.graph_objects as go
+# import plotly.graph_objects as go
 import scipy.ndimage
-import pywavefront
-from objects import binvox_rw
+# import pywavefront
+# from objects.binvox_rw import binvox_rw
+from func import binvox_rw
 
-folder = 'objects/3Dgraphics/'
+folder = 'objects/3Dgraphics/Potato/Potato_obj/'
+
 # filename = 'teapot.binvox'
-filename = 'PotatoSingle.binvox'
+filename = 'potatoSingle100.binvox'
 
 with open(folder+filename, 'rb') as f:
     model = binvox_rw.read_as_3d_array(f)
 
-
+model.data = boundingbox(model.data)
 folder_out = 'objects/generated/'
 np.save(folder_out+filename.split('.')[0], model.data)
 

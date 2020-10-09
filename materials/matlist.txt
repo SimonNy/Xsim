@@ -6,3 +6,4 @@ water
 soft_tissue
 copper
 plexiglass
+bone

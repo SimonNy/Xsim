@@ -40,29 +40,21 @@ def fieldOfView(grid_D, grid_c, voxel_size, d1, fov_size, alpha):
         for j in range(grid_c[1]):
             ind = counter[i]+j
             # Finds all the points for a given ray through the the field of view
-            points = np.asarray(Bresenham3D(0, ray_points[0][i], ray_points[1][j],
-                                            grid_D[0]-1, ray_points[2][i], ray_points[3][j]))
+            points = Bresenham3D(ray_points[0][i], ray_points[1][j],
+                                ray_points[2][i], ray_points[3][j],
+                                grid_D[0])
 
-            """ The stuff below is unnecessary when FOV is defined from the camera size """
-            #Masks to make sure every index is within the the field of view
-            # points_mask = points >= 0
-            # points_mask[points[:, 0] > grid_D[0]-1] = False
-            # points_mask[points[:, 1] > grid_D[1]-1] = False
-            # points_mask[points[:, 2] > grid_D[2]-1] = False
-
-            # points_mask[points_mask[:, 0]*1+points_mask[:, 1]
-            #             * 1+points_mask[:, 2]*1 != 3] = False
-            # # Reshapes the points back to a len(points)x3 array
-            # points = points[points_mask].reshape(np.sum(points_mask[:, 0]*1), 3)
-            #Adds all indencies to a list
-            ray_index_list[:, ind, :] = [points[:, 1], points[:, 2]]
+            ray_index_list[:, ind, :] = points
+            # ray_index_list[:, ind, :] = [points[:, 1], points[:, 2]]
     for i in range(delta_c, grid_c[0]):
         for j in range(i-delta_c, grid_c[1]):
             ind = counter[i]+j-i+delta_c
-            points = np.asarray(Bresenham3D(0, ray_points[0][i], ray_points[1][j],
-                                            grid_D[0]-1, ray_points[2][i], ray_points[3][j]))
+            points = Bresenham3D(ray_points[0][i], ray_points[1][j],
+                                ray_points[2][i], ray_points[3][j],
+                                grid_D[0])
             #Adds all indencies to a list
-            ray_index_list[:, ind, :] = [points[:, 1], points[:, 2]]
+            ray_index_list[:, ind, :] = points
+            # ray_index_list[:, ind, :] = [points[:, 1], points[:, 2]]
 
     return ray_index_list.astype(int)
 

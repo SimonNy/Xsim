@@ -1,38 +1,111 @@
+
+from xraySpec.dataA import arr80
+from runXsim import runXsim
 import numpy as np
-""" User-defined settings for the system """
+from loadObject import loadObject
+
+# loads the object defineed in the loadObject file
+
+filename = "bunny"
+# filename = "sphereWithSphere"
+# filename = "simplePotato"
+# filename = "potatoWithHeart"
+# filename = "boardWithMarks"
+D = loadObject(filename)
+
+
+""" User-defined settings for the system 
+    All distance and sizes are in units of cm
+"""
+# conversion from cm2m all distances written in m instead
+cm2m = 100
 # distance from point souce to the bottom of the material
-d1 = 2
+d1 = 1*cm2m
 # distance from the bottom of the material to the CCD array
-d2 = 1
-#Information about the material size _m is _material
-size_v_D = (1e-3, 1e-3, 1e-3)  # volume of voxel in material
+d2 = 1*cm2m
+#Information about the material 
+voxelSizeD = 0.5e-4*cm2m  # volume of voxel in material
+#Information about the size of the camera
 
-#Information about the size of the camera, _c is _camera
-# physical size of one pixel
-size_ccd_pixel = (1e-3, 1e-3)
-
+pixelArea = 7e-5*cm2m
 #number of ccds in the camera as [n x p]
-#If non symmetric, first input should be largest
-grid_ccd = (500, 500)
+#If asymmetric, first input should be largest
+grid_ccd = (400, 400)
 #The "resolution" of each CCD. Makes more rays hit the same CCD
-ray_ccd_ratio = 1
+Nsubpixels = 2
 
 #Number of Photons in a single pixel direction
-photons_frame = 5000
+photonsRay = 4500
 # Energies in the sampled spectrum
 Emin = 10
 Emax = 80
 Estep = 1
 
 # The total of Image frames
-N_frames = 1
+Nframes = 1
 # The amount of iterations made to create one frame.
-# Generating N_sub frames for every frame. Can be seen as integration time
-N_sub = 1
+# Generating Nsubframes frames for every frame. Can be seen as integration time
+Nsubframes = 1
+photonsRay = int(photonsRay/Nsubframes)
+# Should i do this instead ? scales with the amount of rays in pixel
+# Maybe influences the distribution to much?
+# photonsRay = int(photonsRay/(Nsubframes*Nsubpixels**2))
+
+#The Thresholdvalue(Amount of photons maximally counted) for a Single CCD
+saturation = 4000*Nsubpixels**2
+# saturation = photonsRay*Nsubpixels**2*Nsubframes
+# saturation = 5000*Nsubpixels**2*Nsubframes
+
+#The spectrum for the energies
+spectrum = np.asarray(arr80)
+spectrum = spectrum[9:-1]
+
 
 # Movement in a single subframe in x and z dire
-move_step = (0, 0)
+moveStep = (0, 0)
 # The start position of the object, 0 is centered
-# move_start = (0, 0)
+# moveStart = (0, 0)
 # Makes the total movement symmetrical across the center
-move_start = np.multiply(int(-N_frames*N_sub/2), move_step)
+moveStart = np.multiply(int(-Nframes*Nsubframes/2), moveStep)
+
+# Saves the FOV for multiple use
+keepFOV = False
+# Saves the output images in the dedicated folders
+saveImgs = True
+
+size_ccd_pixel = (pixelArea, pixelArea)
+size_v_D = (voxelSizeD, voxelSizeD, voxelSizeD)
+
+systemParameters = {
+    "d1": d1,
+    "d2": d2,
+    "size_v_D": (voxelSizeD, voxelSizeD, voxelSizeD),
+    "size_ccd_pixel": (pixelArea, pixelArea),
+    "grid_ccd": grid_ccd,
+    "Nsubpixels": Nsubpixels,
+    "photonsRay": photonsRay,
+    # "spectrum": spectrum,
+    "Emin": Emin,
+    "Emax": Emax,
+    "Estep": Estep,
+    "saturation": saturation,
+    "Nframes": Nframes,
+    "Nsubframes": Nsubframes,
+    "moveStep": moveStep,
+    "moveStart": moveStart,
+    "imgName": "",
+    "keepFOV": keepFOV,
+    "saveImgs": saveImgs,
+    }
+
+# Takes a single image with no translations and movement, for reference
+simpleSystem = systemParameters.copy()
+simpleSystem["Nframes"] = 1
+simpleSystem["Nsubframes"] = 1
+simpleSystem["moveStep"] = (0,0)
+simpleSystem["moveStart"] = (0,0)
+simpleSystem["imgName"] = "ref"
+
+if Nframes != 1 or Nsubframes != 1:
+    runXsim(filename, D, spectrum, **simpleSystem)
+runXsim(filename, D, spectrum, **systemParameters)

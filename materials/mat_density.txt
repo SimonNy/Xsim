@@ -3,6 +3,8 @@ aluminium	2.7
 iron	7.874
 air	1.1839E-03
 water	997E-03
-soft_tissue	1
+soft_tissue	1.062619
 copper	8.96
 plexiglass	1.18
+bone	1.803768
+potato	1

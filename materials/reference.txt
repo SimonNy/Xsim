@@ -3,3 +3,9 @@ https://physics.nist.gov/PhysRefData/XrayMassCoef/chap2.html
 https://physics.nist.gov/PhysRefData/Xcom/html/xcom1.html
 
 plexiglass is from https://physics.nist.gov/PhysRefData/XrayMassCoef/ComTab/pmma.html
+
+Potato created with https://physics.nist.gov/cgi-bin/Xcom/xcom2-t
+H20 0.8
+P 0.048
+Mg 0.052
+C 0.1
