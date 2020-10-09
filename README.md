@@ -48,4 +48,4 @@ moveStart | The placemente of object in the first frame.
 ## Small example
 Example of an X-ray image of the Standford Bunny created through **Xsim**:
  
-![X-ray bunny](/results/bunny/CCDreads/bunny1.png, width=100 height=100)
+![X-ray bunny](/results/bunny/CCDreads/bunny1.png)
