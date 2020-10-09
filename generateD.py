@@ -15,18 +15,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 from time import time
 
-plot3D = False
+plot3D = True
 
 # The size of the grid for the object
-grid_D = (30, 30, 30)
+grid_D = (100, 200, 300)
 # The materials the object should consist of
-mat1 = 'air'
-mat2 = 'carbon'
+mat1 = 'carbon'
+mat2 = 'iron'
 #The kind of D to be created
 """kind: boxWithBox, boxWithSphere, oneMat, boxWithSmallSphere, sphere, boardWithMarks"""
-# kind = "boardWithMarks"
+kind = "boardWithMarks"
+# kind = "boxWithCylinder"
 # kind = "oneMat"
-kind = "sphere"
+# kind = "sphere"
 # kind = "boxWithSmallSphere"
 # kind = "twoBoxesWithSmallSphere"
 # kind = "sphereWithSmallSphere"
@@ -86,3 +87,5 @@ if plot3D == True:
     fig.savefig("generatedFigure.pdf", dpi=600)
 
     plt.show
+
+# %%

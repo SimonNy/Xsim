@@ -10,7 +10,7 @@ A function that pulls x-ray energies from a given probability distribution
 #%%
 import numpy as np
 import matplotlib.pyplot as plt
-
+plt.style.use("bmh")
 
 def produceXray(spec, N_points, Emin, Emax, Estep, makePlot = False):
     """Draws x-rays energies for a given distribution. 
@@ -57,7 +57,7 @@ def produceXray(spec, N_points, Emin, Emax, Estep, makePlot = False):
         pc = 400/2409 # the pc unit relative to inchens
         goldenRatio = 1.618 # ratio between width and height
         marginWidth = 11.5 # width of latex margin document
-        resize = 1/0.2 # scale=0.1 in latex
+        resize = 1/0.25 # scale=0.1 in latex
 
         fig, ax = plt.subplots(figsize=(marginWidth*pc*resize, 
                 marginWidth*pc*resize/goldenRatio))
@@ -70,15 +70,15 @@ def produceXray(spec, N_points, Emin, Emax, Estep, makePlot = False):
         ax.set(xlabel='Photon energy [keV]', ylabel='Photon count')
         # ax.get_yaxis().set_visible(False)
         # ax.get_xaxis().set_visible(False)
-        ax.tick_params(axis='x', labelsize=22)
-        ax.tick_params(axis='y', labelsize=22)
-        ax.yaxis.label.set_size(28)
-        ax.xaxis.label.set_size(28)
+        ax.tick_params(axis='x', labelsize=40)
+        ax.tick_params(axis='y', labelsize=40)
+        ax.yaxis.label.set_size(38)
+        ax.xaxis.label.set_size(38)
         # add legend
         # ax.legend(loc='best', fontsize=16)
         # fig.tight_layout()
-
-        fig.savefig("hitNMissSpectrum.pdf", dpi=600)
+        fig.tight_layout()
+        fig.savefig("hitNMissSpectrum.png", dpi=600)
         """ End of Plotting part """
     # counts the number of photons at each energy level
     counts, bin_edges = np.histogram(xhit, bins=N_bins, 
