@@ -15,7 +15,7 @@ The X-ray imaging system is then defined in the file *defineSystem.py* and image
 
 The system can be divide into three parts: X-ray source, object and camera.
 Simple outline of the system: 
-![System](/images/systemGIT.pdf)
+![System](/images/systemGIT.png)
 
 The X-ray source is defined as a point soure emitting X-rays distrubted in relation to a given energy spectrum
 
